@@ -24,7 +24,7 @@ public class MainWindow extends JFrame {
 
     public MainWindow() {
         setTitle("Escape Dungeon");
-        setSize(1000, 1000);
+        setSize(1500, 1000);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         cardLayout = new CardLayout();
@@ -37,7 +37,7 @@ public class MainWindow extends JFrame {
         mainPanel.add(mainMenuPanel, "Menu");
 
         // Add main panel to frame
-        add(mainPanel);
+        this.add(mainPanel);
 
         // Show the menu panel initially
         cardLayout.show(mainPanel, "Menu");
@@ -99,15 +99,14 @@ public class MainWindow extends JFrame {
         // Logic to load a game
     }
 
-    private void showOptions() {
-        // Logic to show options
-    }
-
     public static void main(String[] args) {
+        /*
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
                 new MainWindow().setVisible(true);
             }
-        });
+        });*/
+        MainWindow window = new MainWindow();
+        window.setVisible(true);
     }
 }

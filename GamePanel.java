@@ -13,27 +13,41 @@ import java.awt.*;
 
 public class GamePanel extends JPanel {
     private JLabel roomLabel;
-    private JLabel playerStatusLabel;
-    private JLabel monsterStatusLabel;
+    //private JLabel playerStatusLabel;
+    //private JLabel monsterStatusLabel;
     private JButton attackButton;
     private JButton itemButton;
     private JButton helpButton;
     private JButton quitButton;
+    private Image image;
 
     public GamePanel() {
         setLayout(new BorderLayout());
+        
+        this.image = new ImageIcon("./resources/dungeon_background_1.png").getImage();
 
         roomLabel = new JLabel("Room 1");
         this.add(roomLabel, BorderLayout.NORTH);
 
         JPanel centerPanel = new JPanel(new GridLayout(1, 2));
-        playerStatusLabel = new JLabel("Player");
-        monsterStatusLabel = new JLabel("Monster");
-        centerPanel.add(playerStatusLabel);
-        centerPanel.add(monsterStatusLabel);
+        
+        PlayerPanel player = new PlayerPanel();
+        centerPanel.add(player);
+        
+        centerPanel.setOpaque(false);
+        
         this.add(centerPanel, BorderLayout.CENTER);
 
-        JPanel menuPanel = new JPanel(new GridLayout(1, 4));
+        
+        JPanel southPanel = new JPanel(new GridLayout(1, 3));
+        southPanel.setPreferredSize(new Dimension(1500, 200));
+        this.add(southPanel, BorderLayout.SOUTH);
+        
+        PlayerIconPanel playerIcon = new PlayerIconPanel();
+        
+        JLabel gameChatLog = new JLabel("Game chat goes here");
+        
+        JPanel menuPanel = new JPanel(new GridLayout(2, 2));
         attackButton = new JButton("Attack");
         itemButton = new JButton("Item");
         helpButton = new JButton("Help");
@@ -42,7 +56,14 @@ public class GamePanel extends JPanel {
         menuPanel.add(itemButton);
         menuPanel.add(helpButton);
         menuPanel.add(quitButton);
-        add(menuPanel, BorderLayout.SOUTH);
+        
+        
+        southPanel.add(playerIcon);
+        southPanel.add(gameChatLog);
+        southPanel.add(menuPanel);
+        
+       
+        
 
         // Add action listeners for buttons
         attackButton.addActionListener(e -> performAttack());
@@ -65,5 +86,12 @@ public class GamePanel extends JPanel {
 
     private void quitGame() {
         // Logic for quitting game
+        System.exit(0);
+    }
+    
+    @Override
+    public void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        g.drawImage(this.image, 0, 0, null);
     }
 }
