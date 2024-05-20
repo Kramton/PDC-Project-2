@@ -90,13 +90,33 @@ public class MainWindow extends JFrame {
     }
 
     private void startNewGame() {
-        GamePanel gamePanel = new GamePanel();
-        mainPanel.add(gamePanel, "Game");
-        cardLayout.show(mainPanel, "Game");
+        
+        //text field asking for username
+        Panel createUser = new Panel();
+        JTextField textField = new JTextField("Choose Your Username", 20);
+        JButton buttonSubmit = new JButton("Submit");
+        createUser.add(textField);
+        createUser.add(buttonSubmit);
+        
+        mainPanel.add(createUser, "Create User");
+        cardLayout.show(mainPanel, "Create User");
+        
+        //creates a new user/player with the submitted username
+        buttonSubmit.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                GamePanel gamePanel = new GamePanel(textField.getText().trim());
+                //gamePanel.start();
+                mainPanel.add(gamePanel, "Game");
+                cardLayout.show(mainPanel, "Game");
+            }
+        });
     }
 
     private void loadGame() {
         // Logic to load a game
+        //retrieve player with username from database
+        //if there is no player with that username create a new player
     }
 
     public static void main(String[] args) {
