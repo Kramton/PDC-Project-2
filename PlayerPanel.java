@@ -28,6 +28,7 @@ public class PlayerPanel extends JPanel {
     private int defense;
     private ItemPanel items;
     private JLabel playerStatusLabel;
+    private JLabel imageLabel;
     
 
     public PlayerPanel(String name) {
@@ -60,7 +61,7 @@ public class PlayerPanel extends JPanel {
         nameLabel.setHorizontalAlignment(JLabel.CENTER);
        //nameLabel.setVerticalAlignment(JLabel.CENTER);
         
-        JLabel imageLabel = new JLabel(scaledIcon);
+        imageLabel = new JLabel(scaledIcon);
         imageLabel.setHorizontalAlignment(JLabel.CENTER);
         imageLabel.setVerticalAlignment(JLabel.BOTTOM);
         
@@ -141,6 +142,18 @@ public class PlayerPanel extends JPanel {
     
     public JPanel getPlayerIcon(){
         return this.playerIcon;
+    }
+    
+    public void setImage(String path){
+        this.imageLabel.setIcon(new ImageIcon(path));
+    }
+    
+    public void updateStatusLabel() {
+        playerStatusLabel.setText("<html>Health: " + this.health
+                                + "<br>Attack: " + this.attack
+                                + "<br>Defense: " + this.defense + "</html>");
+        revalidate();
+        repaint();
     }
     
     //don't need to print since we're using label image icon and add it to panel
