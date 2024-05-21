@@ -61,7 +61,7 @@ public class MonsterPanel extends JPanel{
         this.name = "Monster";
         nameLabel = new JLabel(name);
         this.health = 100;
-        this.attack = 20;
+        this.attack = 10;
         this.monsterStatusLabel = new JLabel("<html>Health: " + this.health
                                             + "<br>Attack: " + this.attack + "</html>");
         this.add(monsterStatusLabel, BorderLayout.NORTH);
@@ -118,6 +118,13 @@ public class MonsterPanel extends JPanel{
 
     public void setAttack(int value) {
         this.attack = value;
+    }
+    
+    public void updateStatusLabel() {
+        monsterStatusLabel.setText("<html>Health: " + this.health
+                                    + "<br>Attack: " + this.attack + "</html>");
+        revalidate();
+        repaint();
     }
     
     //what if we don't draw the image itself but just add it as a panel
