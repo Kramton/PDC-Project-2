@@ -18,6 +18,7 @@ import java.util.Scanner;
 public class GamePanel extends JPanel {
     
     private PlayerPanel player;
+    private MonsterPanel monster;
     private int room = 1;
     private final int MAX_ROOM = 5;
     private JLabel roomLabel;
@@ -29,7 +30,8 @@ public class GamePanel extends JPanel {
     //game chat log set to static so that all classes can update it
     public static JLabel gameChatLog;
     
-    public static boolean userInput = false;
+    private static boolean userInput = false;
+    private static int inputNumber;
 
     public GamePanel(String name) {
         setLayout(new BorderLayout());
@@ -62,6 +64,7 @@ public class GamePanel extends JPanel {
         /*A separate thread is started to handle the loop action. 
         This prevents the main event dispatch thread (EDT) from being blocked, 
         which is crucial to keep the GUI responsive. - Chat GPT*/
+        
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -76,176 +79,89 @@ public class GamePanel extends JPanel {
         while (!(player.isDead()) && this.room <= MAX_ROOM) {
             
             //remember to randomly spawn, for now just do this
-            MonsterPanel monster = new MonsterPanel();
+            monster = new MonsterPanel();
             centerPanel.add(monster);
             
+            // Revalidate and repaint to update the UI
+            centerPanel.revalidate();
+            centerPanel.repaint();
+            
             while (!monster.isDead() && !player.isDead()) {
-                
                 //game is idle and waits until user chooses to do something?
-                if (userInput){
-                    int input = MenuPanel.getInputNumber();
-                    //don't know if we should handle the input inside MenuPanel or here
-                    //or maybe we can use input handler again
-                    switch (input){
-                        case 1:
-                            //combat
-                            gameChatLog.setText("Combat happening...");
-                            System.out.println("Combat happening");
-                            break;
-                        case 2:
-                            //use item
-                            break;
-                        case 3: 
-                            //show help
-                            break;
-                            
-                        case 4:
-                            //quit
-                            break;
-                  }
-                  //after input set to false again to wait for next input
-                  userInput = false;
-                
+                if (isUserInput()){
+                    int input = getInputNumber();
+                    handleUserInput(input);
+                    resetUserInput();
                 }
             }
-        }
-        /*
-        while (!(player.isDead()) && this.room <= MAX_ROOM) {
             
-            Random rand = new Random();
-            Scanner scan = new Scanner(System.in);
-
-            System.out.println("You are in room " + this.room);
-
-            //TODO: pick a random monster from the database to spawn
-
-            if (this.room != MAX_ROOM) {
-                //spawns goblin or ogre
-            } 
-            else {
-                //spawns boss
-            }
-            
-            //display monster image and monster status
-            //centerPanel.add(new MonsterPanel());
-
-
-            /*
-            //combat loop
-            while (!monster.isDead() && !player.isDead()) {
-                System.out.println("Player turn! ");
-                System.out.println(oHandler.printMenu());
-
-                System.out.print("> ");
-
-                try {
-                    int choice = scan.nextInt();
-                    switch (choice) {
-
-                        case 1:
-                            iHandler.pCombat(player, monster);
-                            if (!monster.isDead()) {
-                                System.out.println(monster.getName() + "'s turn! ");
-                                iHandler.mCombat(player, monster);
-                            }
-                            break;
-                        case 2:
-                            oHandler.printPlayerStatus(player);
-                            break;
-                        case 3:
-                            oHandler.printPlayerItems(player);
-                            break;
-                        case 4:
-                            boolean isValid = false;
-                            int itemIndex = 0;
-                            while (!isValid) {
-                                System.out.println("Which item number do you want to use (1-5)");
-
-                                if (scan.hasNextInt()) { // Check if the next token is an integer
-                                    itemIndex = scan.nextInt();
-                                    if (itemIndex > 0 && itemIndex <= 5) {
-                                        isValid = true; // Set isValidInput to true to exit the loop
-                                    } else {
-                                        System.out.println("Invalid input. Please enter 1-5");
-                                    }
-                                } else {
-                                    System.out.println("Invalid input. Please enter again");
-                                    scan.next(); // Clear the scanner buffer
-                                }
-                            }
-                            iHandler.useItem(player, itemIndex);
-                            break;
-                        case 5:
-                            //print help menu
-                            oHandler.printHelp();
-                            break;
-                        case 6:
-                            //save game
-                            fio.write(this);
-                            break;
-                        case 7:
-                            //quit
-                            isValid = false;
-                            while (!isValid) {
-                                System.out.println("Would you like to save before you quit? 1. Yes 2. No");
-                                if (scan.hasNextInt()) {
-                                    choice = scan.nextInt();
-                                    if (choice == 1) {
-                                        isValid = true;
-                                        fio.write(this);
-                                        System.out.println("Thank you for playing the game!");
-                                        System.exit(0);
-                                    } 
-                                    else if (choice == 2) {
-                                        isValid = true;
-                                        System.out.println("Thank you for playing the game!");
-                                        System.exit(0);
-                                    } 
-                                    else {
-                                        System.out.println("Invalid input");
-                                    }
-                                } 
-                                else {
-                                    System.out.println("Please enter a number");
-                                    scan.next();
-                                }
-                            }
-
-                            break;
-                        default:
-                            System.out.println("Please enter numbers (1-7)");
-                            break;
-                    }
-
-                } 
-                catch (InputMismatchException e) {
-                    System.out.println("Invalid input. Please enter a valid option (1-7).\n");
-                    scan.nextLine(); // takes in the invalid input.
-                }
-            }
-
             if (monster.isDead()) {
-                System.out.println("You have defeated " + monster.getName() + "!");
-            } 
-            else if (player.isDead()) {
-                System.out.println("You have been defeated!");
+                //System.out.println("You have defeated " + monster.getName() + "!");
+                centerPanel.remove(monster);
             }
-
-            if (this.room != this.MAX_ROOM && !player.isDead()) {
-                Item[] rewards = {new Sword(rand), new Shield(rand), new Potion(rand)};
-                Item reward = rewards[rand.nextInt(rewards.length)];
-                System.out.println("You have received a " + reward.getName());
-                for (int i = 0; i < player.getItems().length; i++) {
-                    if (player.getItems()[i] == null) {
-                        player.setItems(i, reward);
-                        i = player.getItems().length - 1;
-                    }
+            if (player.isDead()) {
+                gameChatLog.setText("You have been defeated!");
+                player.setImage("./resources/Dead (10).png");
+            }
+            else{
+                //add item drop logic here later
+                
+                this.room++;
+                this.roomLabel.setText("Room: " + room); 
+                gameChatLog.setText("Moving to the next room!");
+                this.bgImage = new ImageIcon("./resources/dungeon background "+room+".png").getImage();
+                repaint();
+            }
+            
+        }
+    }
+    
+    private void handleUserInput(int input) {
+        InputHandler iHandler = new InputHandler();
+        switch (input) {
+            case 1:
+                iHandler.pCombat(player, monster);
+                
+                if (!monster.isDead()) {
+                    System.out.println(monster.getName() + "'s turn! ");
+                    iHandler.mCombat(player, monster);
                 }
-                System.out.println("Moving to the next room...");
-            }
-            this.room++;
-        }*/
-        
+                break;
+            case 2:
+                // Use item
+                System.out.println("Using Item");
+                SwingUtilities.invokeLater(() -> gameChatLog.setText("Using item"));
+                break;
+            case 3:
+                System.out.println("Show help button pressed");
+                SwingUtilities.invokeLater(() -> iHandler.help());
+                break;
+            case 4:
+                // Quit
+                System.exit(0);
+                break;
+            default:
+                break;
+        }
+    }
+    
+    //avoid race condition with synchronized methods, only 1 thread can submit it's input
+    public synchronized static void setUserInput(boolean input, int number) {
+        userInput = input;
+        inputNumber = number;
+    }
+    
+    private synchronized boolean isUserInput() {
+        return userInput;
+    }
+    
+    private synchronized int getInputNumber() {
+        return inputNumber;
+    }
+
+    private synchronized void resetUserInput() {
+        userInput = false;
+        inputNumber = 0;
     }
     
     @Override
