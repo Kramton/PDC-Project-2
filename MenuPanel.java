@@ -43,41 +43,20 @@ public class MenuPanel extends JPanel{
     }
     
     private void performAttack() {
-        GamePanel.userInput = true;
-        // Logic for attack...
-        inputNumber = 1;
+        GamePanel.setUserInput(true, 1);
     }
 
     private void useItem() {
-        GamePanel.userInput = true;
-        // Logic for use item...
-        inputNumber = 2;
+        GamePanel.setUserInput(true, 2);
     }
 
     private void showHelp() {
-        GamePanel.userInput = true;
-        // Logic for showing help
-      
-        GamePanel.gameChatLog.setText("<html>=============================== HELP =============================="
-                   + "<br> + Defeat the monster in each room to advance to the next level!"
-                   + "<br> + After clearing the room, you will receive a random item."
-                   + "<br> + Defeat the Boss at room 5 to beat the game!"
-                   + "<br> + Use swords to increase your damage!"
-                   + "<br> + Use shields to increase your defense!"
-                   + "<br> + Use potions to heal yourself!"
-                   + "<br> + Don't forget to save game!"
-                   + "<br> ===================================================================</html>");
-        inputNumber = 3;
+        GamePanel.setUserInput(true, 3);
     }
     
 
     private void quitGame() {
-        // Logic for quitting game
-        System.exit(0);
-    }
-    
-    public static int getInputNumber(){
-        return inputNumber;
+        GamePanel.setUserInput(true, 4);
     }
     
 }
