@@ -47,12 +47,12 @@ public class PlayerPanel extends JPanel {
                                             + "<br>Attack: " + this.attack 
                                             + "<br>Defense: " + this.defense + "</html>");
         
-        ImageIcon icon = new ImageIcon("./resources/PlayerIcon (1).png");
+        ImageIcon icon = new ImageIcon("./resources/icon.png");
         playerIcon = new JPanel();
         playerIcon.add(new JLabel(icon));
         
-        ImageIcon originalIcon = new ImageIcon("./resources/Idle (10).png");
-        Image image = originalIcon.getImage().getScaledInstance(587, 707, Image.SCALE_SMOOTH); // Adjust size as needed
+        ImageIcon originalIcon = new ImageIcon("./resources/idle.png");
+        Image image = originalIcon.getImage().getScaledInstance(500, 550, Image.SCALE_SMOOTH); // Adjust size as needed
         ImageIcon scaledIcon = new ImageIcon(image);
         
         Font font = new Font("Serif", PLAIN, 36);
@@ -145,7 +145,11 @@ public class PlayerPanel extends JPanel {
     }
     
     public void setImage(String path){
-        this.imageLabel.setIcon(new ImageIcon(path));
+        
+        ImageIcon originalIcon = new ImageIcon(path);
+        Image image = originalIcon.getImage().getScaledInstance(500, 600, Image.SCALE_SMOOTH); // Adjust size as needed
+        ImageIcon scaledIcon = new ImageIcon(image);
+        this.imageLabel.setIcon(scaledIcon);
     }
     
     public void updateStatusLabel() {
