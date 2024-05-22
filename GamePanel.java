@@ -65,6 +65,7 @@ public class GamePanel extends JPanel {
         This prevents the main event dispatch thread (EDT) from being blocked, 
         which is crucial to keep the GUI responsive. - Chat GPT*/
         
+        
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -101,7 +102,7 @@ public class GamePanel extends JPanel {
             }
             if (player.isDead()) {
                 gameChatLog.setText("You have been defeated!");
-                player.setImage("./resources/Dead (10).png");
+                player.setImage("./resources/defeated.png");
             }
             else{
                 //add item drop logic here later
@@ -127,17 +128,47 @@ public class GamePanel extends JPanel {
                     iHandler.mCombat(player, monster);
                 }
                 break;
-            case 2:
+            case 21:
                 // Use item
-                System.out.println("Using Item");
-                SwingUtilities.invokeLater(() -> gameChatLog.setText("Using item"));
+                iHandler.useItem(player, 1);
+                SwingUtilities.invokeLater(() -> gameChatLog.setText("Using item 1"));
+                break;
+            case 22:
+                // Use item
+                iHandler.useItem(player, 2);
+                SwingUtilities.invokeLater(() -> gameChatLog.setText("Using item 2"));
+                break;
+            case 23:
+                // Use item
+                iHandler.useItem(player, 3);
+                SwingUtilities.invokeLater(() -> gameChatLog.setText("Using item 3"));
+                break;
+            case 24:
+                // Use item
+                iHandler.useItem(player, 4);
+                SwingUtilities.invokeLater(() -> gameChatLog.setText("Using item 4"));
+                break;
+            case 25:
+                // Use item
+                iHandler.useItem(player, 5);
+                SwingUtilities.invokeLater(() -> gameChatLog.setText("Using item 5"));
                 break;
             case 3:
                 System.out.println("Show help button pressed");
                 SwingUtilities.invokeLater(() -> iHandler.help());
                 break;
             case 4:
-                // Quit
+                // Quit no save
+                System.exit(0);
+                break;
+            case 5:
+                // Quit no save
+                gameChatLog.setText("Saving Game...");
+                try {
+                    Thread.sleep(1000); // Simulate saving game
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
                 System.exit(0);
                 break;
             default:
