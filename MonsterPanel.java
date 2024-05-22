@@ -61,15 +61,15 @@ public class MonsterPanel extends JPanel{
         this.name = "Monster";
         nameLabel = new JLabel(name);
         this.health = 100;
-        this.attack = 10;
+        this.attack = 100;
         this.monsterStatusLabel = new JLabel("<html>Health: " + this.health
                                             + "<br>Attack: " + this.attack + "</html>");
         this.add(monsterStatusLabel, BorderLayout.NORTH);
         
         //ImageIcon image = new ImageIcon("./resources/Dead (10).png");
         
-        ImageIcon originalIcon = new ImageIcon("./resources/Dead (10).png");
-        Image image = originalIcon.getImage().getScaledInstance(800, 800, Image.SCALE_SMOOTH); // Adjust size as needed
+        ImageIcon originalIcon = new ImageIcon("./resources/ogre4.png");
+        Image image = originalIcon.getImage().getScaledInstance(400, 600, Image.SCALE_SMOOTH); // Adjust size as needed
         ImageIcon scaledIcon = new ImageIcon(image);
         
         Font font = new Font("Serif", PLAIN, 36);
