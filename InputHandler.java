@@ -79,9 +79,10 @@ public class InputHandler {
         player.updateStatusLabel();
     }
 
-    /*
+    
     //use item
     public void useItem(PlayerPanel player, int itemIndex) {
+        /*
         itemIndex--;
 
         if (player.getItems()[itemIndex] == null) {
@@ -102,7 +103,8 @@ public class InputHandler {
             System.out.println("Your defense has increased by " + player.getItems()[itemIndex].getStat());
             player.setItems(itemIndex, null);
         }
-    }*/
+        */
+    }
     
     
     public void help() {
