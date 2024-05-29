@@ -17,6 +17,7 @@ import java.util.InputMismatchException;
 import java.util.Random;
 import java.util.Scanner;
 import main.Monsters.*;
+import main.database.Tables;
 
 public class GamePanel extends JPanel {
     
@@ -38,6 +39,8 @@ public class GamePanel extends JPanel {
     
     private static boolean userInput = false;
     private static int inputNumber;
+    
+    Tables tables;
 
     public GamePanel(String name) {
         
@@ -75,6 +78,15 @@ public class GamePanel extends JPanel {
         which is crucial to keep the GUI responsive. - Chat GPT*/
         
         
+        tables = new Tables();
+        
+        tables.createGameEntryTable();
+        tables.createPlayerTable();
+        tables.createItemTable();
+//        tables.createMonsterTable();
+        
+//        tables.closeConnection();
+        
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -98,7 +110,7 @@ public class GamePanel extends JPanel {
 //            
 //            MonsterPanel[] monsters = {goblin, ogre, boss};
 //            System.out.println(monsters);
-                monster = new MonsterPanel();
+                monster = new Goblin(rand);
                 centerPanel.add(monster);
 
                 // Revalidate and repaint to update the UI
@@ -126,29 +138,34 @@ public class GamePanel extends JPanel {
                     player.setImage("./resources/defeated.png");
                 } else {
                     // Item drop logic and add to inventory
-                    ItemPanel[] rewards = {new Sword(rand), new Shield(rand), new Potion(rand)};
-                    ItemPanel reward = rewards[rand.nextInt(rewards.length)];
+//                    ItemPanel[] rewards = {new Sword(rand), new Shield(rand), new Potion(rand)};
+//                    ItemPanel reward = rewards[rand.nextInt(rewards.length)];
+
+                    ItemPanel reward = tables.getRandomItem();
                     player.addItemToInvetory(reward);
 
-                    String imagePath = "";
-                    switch (reward.getName()) {
-                        case "Potion":
-                            imagePath = "./resources/test3.png";
-                            break;
-                        case "Shield":
-                            imagePath = "./resources/test.png";
-                            break;
-                        case "Sword":
-                            imagePath = "./resources/test2.png";
-                            break;
-                    }
+//                    String imagePath = "";
+//                    switch (reward.getName()) {
+//                        case "Potion":
+//                            imagePath = "./resources/test3.png";
+//                            break;
+//                        case "Shield":
+//                            imagePath = "./resources/test.png";
+//                            break;
+//                        case "Sword":
+//                            imagePath = "./resources/test2.png";
+//                            break;
+//                    }
 
                     // Adding the image to the centerPanel
-                    if (!imagePath.isEmpty()) {
-                        itemLabel = new JLabel(new ImageIcon(imagePath));
-                        centerPanel.add(itemLabel);
-                    }
-                    
+//                    if (!imagePath.isEmpty()) {
+//                        
+//                    }
+//                    itemLabel = new JLabel(new ImageIcon(imagePath));
+                    centerPanel.add(reward);
+                        
+                        
+                        
                     // update UI to show item drop
                     gameChatLog.setText("You have received a " + reward.getName() + "!");
                     centerPanel.revalidate();
@@ -156,7 +173,7 @@ public class GamePanel extends JPanel {
                     
                     Thread.sleep(1500);
 
-                    centerPanel.remove(itemLabel);
+                    centerPanel.remove(reward);
 
                     this.room++;
                     this.roomLabel.setText("Room: " + room);
