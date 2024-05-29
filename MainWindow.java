@@ -41,6 +41,8 @@ public class MainWindow extends JFrame {
 
         // Show the menu panel initially
         cardLayout.show(mainPanel, "Menu");
+        
+        
     }
 
     private JPanel createMenuPanel() {
@@ -106,7 +108,7 @@ public class MainWindow extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 GamePanel gamePanel = new GamePanel(textField.getText().trim());
-                //gamePanel.start();
+                //gamePanel.gameStart();
                 mainPanel.add(gamePanel, "Game");
                 cardLayout.show(mainPanel, "Game");
             }
@@ -120,13 +122,24 @@ public class MainWindow extends JFrame {
     }
 
     public static void main(String[] args) {
+        
         /*
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
-                new MainWindow().setVisible(true);
+                MainWindow window = new MainWindow();
+                window.setVisible(true);
             }
         });*/
         MainWindow window = new MainWindow();
         window.setVisible(true);
+        
+        Tables tables = new Tables();
+        
+        tables.createGameEntryTable();
+        tables.createPlayerTable();
+        tables.createItemTable();
+        tables.createMonsterTable();
+        
+        tables.closeConnection();
     }
 }
