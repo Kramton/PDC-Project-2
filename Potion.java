@@ -5,6 +5,7 @@
 package main.Items;
 
 import java.util.Random;
+import javax.swing.ImageIcon;
 import main.ItemPanel;
 import main.PlayerPanel;
 
@@ -14,15 +15,23 @@ import main.PlayerPanel;
  */
 public class Potion extends ItemPanel {
     
-    private int healAmount;
+//    private int healAmount;
     
     public Potion(Random rand) {
-        super("Potion");
-        this.healAmount = rand.nextInt(20) + 20;
+        super("Potion", rand.nextInt(20) + 20, new ImageIcon("./resources/potionItem4.png"));
     }
+    
+    public Potion(int stat) {
+        super("Potion", stat, new ImageIcon("./resources/potionItem4.png"));
+    }
+    
+//    public Potion(Random rand) {
+//        super("Potion");
+//        this.stat = rand.nextInt(20) + 20;
+//    }
     
     @Override
     public void applyEffect(PlayerPanel player) {
-        player.changeHealth(healAmount);
+        player.changeHealth(this.stat);
     }
 }

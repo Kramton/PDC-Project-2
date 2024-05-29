@@ -5,6 +5,7 @@
 package main.Monsters;
 
 import java.util.Random;
+import javax.swing.ImageIcon;
 import main.MonsterPanel;
 
 /**
@@ -17,6 +18,6 @@ public class Goblin extends MonsterPanel {
     // attack 15-25
 
     public Goblin(Random rand) {
-        super("Goblin", rand.nextInt(20) + 40, rand.nextInt(10) + 15);
+        super("Goblin", rand.nextInt(20) + 40, rand.nextInt(10) + 15, new ImageIcon("./resources/ogre4.png"));
     }
 }

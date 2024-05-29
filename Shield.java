@@ -5,6 +5,7 @@
 package main.Items;
 
 import java.util.Random;
+import javax.swing.ImageIcon;
 import main.ItemPanel;
 import main.PlayerPanel;
 
@@ -14,16 +15,24 @@ import main.PlayerPanel;
  */
 public class Shield extends ItemPanel {
     
-    private int defenseBoost;
+    //private int defenseBoost;
     
     public Shield(Random rand) {
-        super("Shield");
-        this.defenseBoost = rand.nextInt(10) + 5;
+        super("Shield", rand.nextInt(10) + 5, new ImageIcon("./resources/shieldItem2.png"));
     }
+        
+    public Shield(int stat) {
+        super("Shield", stat, new ImageIcon("./resources/shieldItem2.png"));
+    }
+    
+//    public Shield(Random rand) {
+//        super("Shield");
+//        this.stat = rand.nextInt(10) + 5;
+//    }
     
     @Override
     public void applyEffect(PlayerPanel player) {
-        player.changeDefense(defenseBoost);
+        player.changeDefense(this.stat);
     }
 
 }

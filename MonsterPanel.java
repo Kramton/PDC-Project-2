@@ -18,15 +18,16 @@ import javax.swing.*;
  *
  * @author ADMIN
  */
-public class MonsterPanel extends JPanel{
+public abstract class MonsterPanel extends JPanel{
     
     //public Image image;
     
-    protected String name;
-    protected int health;
-    protected int attack;
+    public String name;
+    public int health;
+    public int attack;
     protected JLabel monsterStatusLabel;
     protected JLabel nameLabel;
+    ImageIcon originalIcon;
 
     
     public MonsterPanel(String name, int health, int attack) {
@@ -51,6 +52,41 @@ public class MonsterPanel extends JPanel{
         
         this.monsterStatusLabel = new JLabel("<html>Health: " + this.health
                                             + "<br>Attack: " + this.attack + "</html>");
+    }
+    
+    public MonsterPanel(String name, int health, int attack, ImageIcon originalIcon) {
+        
+        this.setLayout(new BorderLayout());
+        this.setOpaque(false);
+        this.name = name;
+        nameLabel = new JLabel(name);
+        this.health = health;
+        this.attack = attack;
+        //when child class instantiates pass in corresponding image
+        this.originalIcon = originalIcon;
+        Image image = originalIcon.getImage().getScaledInstance(400, 600, Image.SCALE_SMOOTH); // Adjust size as needed
+        ImageIcon scaledIcon = new ImageIcon(image);
+        
+        this.monsterStatusLabel = new JLabel("<html>Health: " + this.health
+                                            + "<br>Attack: " + this.attack + "</html>");
+        
+        this.add(monsterStatusLabel, BorderLayout.NORTH);
+        
+        Font font = new Font("Serif", PLAIN, 36);
+        monsterStatusLabel.setFont(font);
+        monsterStatusLabel.setForeground(Color.WHITE);
+        monsterStatusLabel.setHorizontalAlignment(JLabel.CENTER);
+        nameLabel.setFont(font);
+        nameLabel.setForeground(Color.WHITE);
+        nameLabel.setHorizontalAlignment(JLabel.CENTER);
+        //nameLabel.setVerticalAlignment(JLabel.CENTER);
+        
+        JLabel imageLabel = new JLabel(scaledIcon);
+        imageLabel.setHorizontalAlignment(JLabel.CENTER);
+        imageLabel.setVerticalAlignment(JLabel.BOTTOM);
+        
+        this.add(imageLabel, BorderLayout.CENTER);
+        this.add(nameLabel, BorderLayout.SOUTH);
     }
     
     //just to test before we can connect to database
@@ -128,13 +164,13 @@ public class MonsterPanel extends JPanel{
         repaint();
     }
     
-    public void setImage(String path){
-        
-        ImageIcon originalIcon = new ImageIcon(path);
-        Image image = originalIcon.getImage().getScaledInstance(500, 600, Image.SCALE_SMOOTH); // Adjust size as needed
-        ImageIcon scaledIcon = new ImageIcon(image);
-        this.nameLabel.setIcon(scaledIcon);
-    }
+//    public void setImage(String path){
+//        
+//        ImageIcon originalIcon = new ImageIcon(path);
+//        Image image = originalIcon.getImage().getScaledInstance(500, 600, Image.SCALE_SMOOTH); // Adjust size as needed
+//        ImageIcon scaledIcon = new ImageIcon(image);
+//        this.nameLabel.setIcon(scaledIcon);
+//    }
     
     //what if we don't draw the image itself but just add it as a panel
     /*

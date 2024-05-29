@@ -5,6 +5,7 @@
 package main.Monsters;
 
 import java.util.Random;
+import javax.swing.ImageIcon;
 import main.MonsterPanel;
 
 /**
@@ -17,6 +18,6 @@ public class Ogre extends MonsterPanel{
     // attack 10-20
 
     public Ogre(Random rand) {
-        super("Ogre", rand.nextInt(20) + 60, rand.nextInt(10) + 10);
+        super("Ogre", rand.nextInt(20) + 60, rand.nextInt(10) + 10, new ImageIcon("./resources/ogre4.png"));
     }
 }

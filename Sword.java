@@ -5,6 +5,7 @@
 package main.Items;
 
 import java.util.Random;
+import javax.swing.ImageIcon;
 import main.ItemPanel;
 import main.PlayerPanel;
 
@@ -14,16 +15,24 @@ import main.PlayerPanel;
  */
 public class Sword extends ItemPanel {
 
-    private int attackBoost;
+//    private int attackBoost;
     
     public Sword(Random rand) {
-        super("Sword");
-        this.attackBoost = rand.nextInt(10) + 5;
+        super("Sword", rand.nextInt(10) + 5, new ImageIcon("./resources/swordItem2.png"));
     }
+    
+    public Sword(int stat) {
+        super("Sword", stat, new ImageIcon("./resources/swordItem2.png"));
+    }
+    
+//    public Sword(Random rand) {
+//        super("Sword");
+//        this.attackBoost = rand.nextInt(10) + 5;
+//    }
     
     @Override
     public void applyEffect(PlayerPanel player) {
-        player.changeAttack(attackBoost);
+        player.changeAttack(this.stat);
     }
 
 }

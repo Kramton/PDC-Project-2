@@ -5,6 +5,7 @@
 package main.Monsters;
 
 import java.util.Random;
+import javax.swing.ImageIcon;
 import main.MonsterPanel;
 
 /**
@@ -16,7 +17,7 @@ public class Boss extends MonsterPanel {
     // health 100-120
     // attack 30-40
     public Boss(Random rand) {
-        super("Boss", rand.nextInt(20) + 100, rand.nextInt(10) + 30);
+        super("Boss", rand.nextInt(20) + 100, rand.nextInt(10) + 30, new ImageIcon("./resources/ogre4.png"));
     }
     
     public Boss() {
