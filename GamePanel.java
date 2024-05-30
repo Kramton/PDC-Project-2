@@ -12,6 +12,8 @@ import main.Items.*;
 import javax.swing.*;
 import java.awt.*;
 import static java.awt.Font.PLAIN;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.Random;
@@ -19,11 +21,12 @@ import java.util.Scanner;
 import main.Monsters.*;
 import main.database.Tables;
 
-public class GamePanel extends JPanel {
+public class GamePanel extends JPanel implements Runnable{
     
     private PlayerPanel player;
     private MonsterPanel monster;
     private int room = 1;
+    private int gameID;
     private final int MAX_ROOM = 5;
     private JLabel roomLabel;
     private JLabel itemLabel;
@@ -40,12 +43,14 @@ public class GamePanel extends JPanel {
     private static boolean userInput = false;
     private static int inputNumber;
     
+    public static boolean loadedGame = false;
+    
     Tables tables;
 
     public GamePanel(String name) {
         
         inventory = new ArrayList<>();
-        
+        gameID = 0;
         setLayout(new BorderLayout());
         this.bgImage = new ImageIcon("./resources/dungeon_background_1.png").getImage();
         roomLabel = new JLabel("Room " + room);
@@ -57,6 +62,7 @@ public class GamePanel extends JPanel {
         //center panel displays Player (image and name), monster (image, name and stats)
         centerPanel = new JPanel(new GridLayout(1, 2));
         player = new PlayerPanel(name);
+        monster = null;
         centerPanel.add(player);
         centerPanel.setOpaque(false);
         this.add(centerPanel, BorderLayout.CENTER);
@@ -83,16 +89,21 @@ public class GamePanel extends JPanel {
         tables.createGameEntryTable();
         tables.createPlayerTable();
         tables.createItemTable();
-//        tables.createMonsterTable();
+        tables.createMonsterTable();
         
 //        tables.closeConnection();
-        
+        /*
         new Thread(new Runnable() {
             @Override
             public void run() {
                 gameStart();
             }
-        }).start();
+        }).start();*/
+    }
+    
+    @Override
+    public void run() {
+        gameStart();
     }
     
     public void gameStart() {
@@ -102,15 +113,16 @@ public class GamePanel extends JPanel {
 
             while (!(player.isDead()) && this.room <= MAX_ROOM) {
                 Random rand = new Random();
-
-//            remember to randomly spawn, for now just do this
-//            Goblin goblin = new Goblin(rand);
-//            Ogre ogre = new Ogre(rand);
-//            Boss boss = new Boss(rand);
-//            
-//            MonsterPanel[] monsters = {goblin, ogre, boss};
-//            System.out.println(monsters);
-                monster = new Goblin(rand);
+                
+                if(!loadedGame){
+                    if(room == 5){
+                    monster = tables.getRandomBoss();
+                    }
+                    else{
+                        monster = tables.getRandomMonster();
+                    }
+                }
+                
                 centerPanel.add(monster);
 
                 // Revalidate and repaint to update the UI
@@ -130,6 +142,7 @@ public class GamePanel extends JPanel {
                     //System.out.println("You have defeated " + monster.getName() + "!");
 
                     centerPanel.remove(monster);
+                    loadedGame = false;
 
                 }
 
@@ -138,34 +151,11 @@ public class GamePanel extends JPanel {
                     player.setImage("./resources/defeated.png");
                 } else {
                     // Item drop logic and add to inventory
-//                    ItemPanel[] rewards = {new Sword(rand), new Shield(rand), new Potion(rand)};
-//                    ItemPanel reward = rewards[rand.nextInt(rewards.length)];
 
                     ItemPanel reward = tables.getRandomItem();
                     player.addItemToInvetory(reward);
-
-//                    String imagePath = "";
-//                    switch (reward.getName()) {
-//                        case "Potion":
-//                            imagePath = "./resources/test3.png";
-//                            break;
-//                        case "Shield":
-//                            imagePath = "./resources/test.png";
-//                            break;
-//                        case "Sword":
-//                            imagePath = "./resources/test2.png";
-//                            break;
-//                    }
-
-                    // Adding the image to the centerPanel
-//                    if (!imagePath.isEmpty()) {
-//                        
-//                    }
-//                    itemLabel = new JLabel(new ImageIcon(imagePath));
                     centerPanel.add(reward);
-                        
-                        
-                        
+                    
                     // update UI to show item drop
                     gameChatLog.setText("You have received a " + reward.getName() + "!");
                     centerPanel.revalidate();
@@ -178,11 +168,45 @@ public class GamePanel extends JPanel {
                     this.room++;
                     this.roomLabel.setText("Room: " + room);
                     gameChatLog.setText("Moving to the next room!");
-                    this.bgImage = new ImageIcon("./resources/dungeon background " + room + ".png").getImage();
+                    setBgImage(room);
                     repaint();
                 }
 
             }
+            //when you lose
+            if (player.isDead()) {
+                this.bgImage = new ImageIcon("./resources/gameover.png").getImage();
+            }
+            //when you win
+            else{
+                player.setImage("./resources/victorious.png");
+                this.bgImage = new ImageIcon("./resources/youwin.png").getImage();
+            }
+            
+            centerPanel.remove(monster);
+            this.remove(southPanel);
+            this.remove(roomLabel);
+            centerPanel.setLayout(new GridBagLayout());
+            GridBagConstraints gbc = new GridBagConstraints();
+            gbc.insets = new Insets(10, 10, 10, 10);
+            gbc.gridx = -1;
+
+            //gbc.gridx = 1;
+            JButton quitButton = new JButton("Quit");
+            gbc.gridy = 1;
+            centerPanel.add(quitButton, gbc);
+
+            // Add action listeners
+            quitButton.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    System.exit(0);
+                }
+            });
+            centerPanel.revalidate();
+            centerPanel.repaint();
+            repaint();
+            
+            
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -198,6 +222,7 @@ public class GamePanel extends JPanel {
                     System.out.println(monster.getName() + "'s turn! ");
                     iHandler.mCombat(player, monster);
                 }
+               
                 break;
             case 21:
                 // Use item
@@ -284,8 +309,9 @@ public class GamePanel extends JPanel {
                 System.exit(0);
                 break;
             case 5:
-                // Quit no save
+                // Quit save
                 gameChatLog.setText("Saving Game...");
+                tables.saveGame(player, room, monster);
                 try {
                     Thread.sleep(1000); // Simulate saving game
                 } catch (InterruptedException e) {
@@ -315,6 +341,23 @@ public class GamePanel extends JPanel {
     private synchronized void resetUserInput() {
         userInput = false;
         inputNumber = 0;
+    }
+    
+    public void setGameID(int id){
+        this.gameID = id;
+    }
+    public void setPlayer(PlayerPanel player){
+        this.player = player;
+    }
+    public void setMonster(MonsterPanel monster){
+        this.monster = monster;
+    }
+    public void setRoom(int room){
+        this.room = room;
+    }
+    
+    public void setBgImage(int room){
+        this.bgImage = this.bgImage = new ImageIcon("./resources/dungeon background " + room + ".png").getImage();
     }
     
     @Override
