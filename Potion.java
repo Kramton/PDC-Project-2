@@ -17,12 +17,15 @@ public class Potion extends ItemPanel {
     
 //    private int healAmount;
     
+    //when populating table
     public Potion(Random rand) {
-        super("Potion", rand.nextInt(20) + 20, new ImageIcon("./resources/potionItem4.png"));
+        super("Potion", rand.nextInt(20) + 20);
     }
     
-    public Potion(int stat) {
-        super("Potion", stat, new ImageIcon("./resources/potionItem4.png"));
+    
+    //when generating random item
+    public Potion(int stat, int id) {
+        super("Potion", stat, id, new ImageIcon("./resources/potionItem4.png"));
     }
     
 //    public Potion(Random rand) {

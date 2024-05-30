@@ -18,11 +18,11 @@ public class Shield extends ItemPanel {
     //private int defenseBoost;
     
     public Shield(Random rand) {
-        super("Shield", rand.nextInt(10) + 5, new ImageIcon("./resources/shieldItem2.png"));
+        super("Shield", rand.nextInt(10) + 5);
     }
         
-    public Shield(int stat) {
-        super("Shield", stat, new ImageIcon("./resources/shieldItem2.png"));
+    public Shield(int stat, int id) {
+        super("Shield", stat, id, new ImageIcon("./resources/shieldItem2.png"));
     }
     
 //    public Shield(Random rand) {

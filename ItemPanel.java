@@ -17,17 +17,19 @@ import javax.swing.JPanel;
  */
 public abstract class ItemPanel extends JPanel{
 
-    public String name;
-    public int stat;
-//    public int itemID;
+    protected String name;
+    protected int stat;
+    protected int itemID;
     
     ImageIcon originalIcon;
     
         // TODO: itemID
 //    public ItemPanel(int itemID, String name, int stat, ImageIcon originalIcon) {
-    public ItemPanel(String name, int stat, ImageIcon originalIcon) {
+    
+    //this constructor is called when generating a random item
+    public ItemPanel(String name, int stat, int itemID, ImageIcon originalIcon) {
         this.setOpaque(false);
-//        this.itemID = itemID;
+        this.itemID = itemID;
         this.name = name;
         this.stat = stat;
         this.originalIcon = originalIcon;
@@ -43,13 +45,10 @@ public abstract class ItemPanel extends JPanel{
         
     }
     
-    public ItemPanel() {
-        this.name = null;
-        this.stat = 0;
-    }
-
-    public ItemPanel(String name) {
+    //this constructor is called when populating the table
+    public ItemPanel(String name, int stat) {
         this.name = name;
+        this.stat = stat;
     }
     
     public abstract void applyEffect(PlayerPanel player);
@@ -61,6 +60,10 @@ public abstract class ItemPanel extends JPanel{
     public int getStat() {
         return this.stat;
     }
+    
+    public int getID() {
+        return this.itemID;
+    }
 
     public void setName(String name) {
         this.name = name;
@@ -68,6 +71,10 @@ public abstract class ItemPanel extends JPanel{
 
     public void setStat(int stat) {
         this.stat = stat;
+    }
+    
+    public void setID(int id){
+        this.itemID = id;
     }
     
     /*

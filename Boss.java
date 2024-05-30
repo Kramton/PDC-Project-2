@@ -17,10 +17,10 @@ public class Boss extends MonsterPanel {
     // health 100-120
     // attack 30-40
     public Boss(Random rand) {
-        super("Boss", rand.nextInt(20) + 100, rand.nextInt(10) + 30, new ImageIcon("./resources/ogre4.png"));
+        super("Boss", rand.nextInt(20) + 100, rand.nextInt(10) + 30);
     }
     
-    public Boss() {
-        super();
+    public Boss(int health, int atk, int id) {
+        super("Boss", health, atk,id, new ImageIcon("./resources/dragon3.png"));
     }
 }

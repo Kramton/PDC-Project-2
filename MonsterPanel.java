@@ -22,29 +22,17 @@ public abstract class MonsterPanel extends JPanel{
     
     //public Image image;
     
-    public String name;
-    public int health;
-    public int attack;
+    protected String name;
+    protected int id;
+    protected int health;
+    protected int attack;
     protected JLabel monsterStatusLabel;
     protected JLabel nameLabel;
     ImageIcon originalIcon;
 
     
+    //this constructor is called when populating the table
     public MonsterPanel(String name, int health, int attack) {
-        
-        /*
-        if (name.equals("Ogre"))
-        {
-            this.image = new ImageIcon("./resources/Ogre Image goes here").getImage();
-        }
-        if (name.equals("Goblin"))
-        {
-            this.image = new ImageIcon("./resources/Goblin Image goes here").getImage();
-        }
-        if (name.equals("Boss"))
-        {
-            this.image = new ImageIcon("./resources/Boss Image goes here").getImage();
-        }*/
         
         this.name = name;
         this.health = health;
@@ -54,10 +42,12 @@ public abstract class MonsterPanel extends JPanel{
                                             + "<br>Attack: " + this.attack + "</html>");
     }
     
-    public MonsterPanel(String name, int health, int attack, ImageIcon originalIcon) {
+    //this constructor is called when generating a random monster
+    public MonsterPanel(String name, int health, int attack, int id, ImageIcon originalIcon) {
         
         this.setLayout(new BorderLayout());
         this.setOpaque(false);
+        this.id = id;
         this.name = name;
         nameLabel = new JLabel(name);
         this.health = health;
@@ -90,6 +80,7 @@ public abstract class MonsterPanel extends JPanel{
     }
     
     //just to test before we can connect to database
+    /*
     public MonsterPanel() {
         this.setLayout(new BorderLayout());
         //this.image = new ImageIcon("./resources/Dead (10).png").getImage();
@@ -123,7 +114,7 @@ public abstract class MonsterPanel extends JPanel{
         
         this.add(imageLabel, BorderLayout.CENTER);
         this.add(nameLabel, BorderLayout.SOUTH);
-    }
+    }*/
 
     public boolean isDead() {
         if (getHealth() <= 0) {
@@ -131,6 +122,10 @@ public abstract class MonsterPanel extends JPanel{
             return true;
         }
         return false;
+    }
+    
+    public int getID() {
+        return this.id;
     }
 
     public String getName() {
@@ -144,6 +139,10 @@ public abstract class MonsterPanel extends JPanel{
     public int getAttack() {
         return this.attack;
     }
+    
+    public void setID(int id) {
+        this.id = id;
+    }
 
     public void setName(String name) {
         this.name = name;
@@ -156,6 +155,8 @@ public abstract class MonsterPanel extends JPanel{
     public void setAttack(int value) {
         this.attack = value;
     }
+    
+    
     
     public void updateStatusLabel() {
         monsterStatusLabel.setText("<html>Health: " + this.health

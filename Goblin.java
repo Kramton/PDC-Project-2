@@ -17,7 +17,14 @@ public class Goblin extends MonsterPanel {
     // health 40-60
     // attack 15-25
 
+    //used when populating table
     public Goblin(Random rand) {
-        super("Goblin", rand.nextInt(20) + 40, rand.nextInt(10) + 15, new ImageIcon("./resources/ogre4.png"));
+        super("Goblin", rand.nextInt(20) + 40, rand.nextInt(10) + 15);
+    }
+    
+    
+    //used when generating random monster
+    public Goblin(int health, int atk, int id) {
+        super("Goblin", health, atk,id, new ImageIcon("./resources/goblin3.png"));
     }
 }

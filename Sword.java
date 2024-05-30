@@ -18,11 +18,11 @@ public class Sword extends ItemPanel {
 //    private int attackBoost;
     
     public Sword(Random rand) {
-        super("Sword", rand.nextInt(10) + 5, new ImageIcon("./resources/swordItem2.png"));
+        super("Sword", rand.nextInt(10) + 5);
     }
     
-    public Sword(int stat) {
-        super("Sword", stat, new ImageIcon("./resources/swordItem2.png"));
+    public Sword(int stat, int id) {
+        super("Sword", stat, id, new ImageIcon("./resources/swordItem2.png"));
     }
     
 //    public Sword(Random rand) {

@@ -18,6 +18,10 @@ public class Ogre extends MonsterPanel{
     // attack 10-20
 
     public Ogre(Random rand) {
-        super("Ogre", rand.nextInt(20) + 60, rand.nextInt(10) + 10, new ImageIcon("./resources/ogre4.png"));
+        super("Ogre", rand.nextInt(20) + 60, rand.nextInt(10) + 10);
+    }
+    
+    public Ogre(int health, int atk, int id) {
+        super("Ogre", health, atk, id, new ImageIcon("./resources/ogre4.png"));
     }
 }
