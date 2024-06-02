@@ -140,21 +140,34 @@ public class MainWindow extends JFrame {
                 
                 //if game doesnt exist, create a new game
                 if(gamePanel == null){
-                    loadUser.add(new JLabel("User doesn't exist! Creating new game..."));
-                    try {
-                        Thread.sleep(2000); // for player to be able to read the message above
-                    } catch (InterruptedException ie) {
-                        ie.printStackTrace();
-                    }
-                    GamePanel.loadedGame = false;
-                    gamePanel = new GamePanel(userName);
+                    SwingUtilities.invokeLater(() -> {
+                        JLabel messageLabel = new JLabel("User doesn't exist! Creating new game...");
+                        loadUser.add(messageLabel);
+                        loadUser.revalidate();
+                        loadUser.repaint();
+                    });
+
+                    // Allow player to read message
+                    new Timer(2000, new ActionListener() {
+                        @Override
+                        public void actionPerformed(ActionEvent e) {
+                            System.out.println("Playerdoes not exist");
+                            GamePanel.loadedGame = false;
+                            GamePanel newGamePanel = new GamePanel(userName);
+                            mainPanel.add(newGamePanel, "Game");
+                            cardLayout.show(mainPanel, "Game");
+                            Thread thread= new Thread(newGamePanel);
+                            thread.start();
+                            ((Timer) e.getSource()).stop();
+                        }
+                    }).start();
                 }
-                
-                //gamePanel.gameStart();
-                mainPanel.add(gamePanel, "Game");
-                cardLayout.show(mainPanel, "Game");
-                Thread thread= new Thread(gamePanel);
-                thread.start();
+                else{
+                    mainPanel.add(gamePanel, "Game");
+                    cardLayout.show(mainPanel, "Game");
+                    Thread thread= new Thread(gamePanel);
+                    thread.start();
+                }
             }
         });
     }
