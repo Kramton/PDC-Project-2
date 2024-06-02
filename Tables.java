@@ -40,7 +40,7 @@ public class Tables {
             this.statement = conn.createStatement();
             
             if(!(this.checkExistedTable("GAME"))){
-                this.statement.addBatch("CREATE TABLE GAME (GAMEID INT, USERID INT, ROOM INT, MONSTERID INT)");//might add monster ID to save it as well
+                this.statement.addBatch("CREATE TABLE GAME (GAMEID INT, PLAYER_ID INT, ROOM INT, MONSTERID INT)");//might add monster ID to save it as well
                 this.statement.executeBatch();
             }
         } catch (SQLException ex) {
@@ -53,14 +53,8 @@ public class Tables {
             this.statement = conn.createStatement();
             
             if(!(this.checkExistedTable("PLAYER"))){
-            
-                //when you create this table you shouldn't add any entries to it, but we're doing it to test "load game"
-                this.statement.addBatch("CREATE  TABLE PLAYER  (USERID INT, USERNAME VARCHAR(50), PLAYER_HEALTH INT, PLAYER_ATK INT, PLAYER_DEF INT, "
+                this.statement.addBatch("CREATE  TABLE PLAYER  (PLAYER_ID INT, USERNAME VARCHAR(50), PLAYER_HEALTH INT, PLAYER_ATK INT, PLAYER_DEF INT, "
                         + "ITEM_1_ID INT, ITEM_2_ID INT, ITEM_3_ID INT, ITEM_4_ID INT, ITEM_5_ID INT)");
-
-                this.statement.addBatch("INSERT INTO PLAYER VALUES (1, 'Dai', 100, 20, 5, NULL, NULL, NULL, NULL, NULL),\n"
-                        + "(2, 'Mark', 50, 40, 10, 1, NULL, 2, NULL, NULL)");
-
                 this.statement.executeBatch();
             }
             
@@ -137,7 +131,7 @@ public class Tables {
         String sql1 = String.format(
             "SELECT * FROM game g, player p, monster m " +
             "WHERE p.USERNAME = '%s' " +
-            "AND g.USERID = p.USERID " +
+            "AND g.PLAYER_ID = p.PLAYER_ID " +
             "AND g.MONSTERID = m.MONSTERID",
             userName
         );
@@ -163,7 +157,7 @@ public class Tables {
                 //get all necessary variables
                 int gameID = rs.getInt("GAMEID");
                 int room = rs.getInt("ROOM");
-                int userID = rs.getInt("USERID");
+                int userID = rs.getInt("PLAYER_ID");
                 int pHealth = rs.getInt("PLAYER_HEALTH");
                 int pAttack = rs.getInt("PLAYER_ATK");
                 int pDefense = rs.getInt("PLAYER_DEF");
@@ -183,6 +177,7 @@ public class Tables {
                 player.setHealth(pHealth);
                 player.setAttack(pAttack);
                 player.setDefense(pDefense);
+                player.updateStatusLabel();
                 
                 switch(monsterName){
                     case "Ogre":
@@ -198,7 +193,7 @@ public class Tables {
                 game = new GamePanel(userName);
                 game.setRoom(room);
                 game.setBgImage(room);
-                
+                game.setRoomLabel(room);
                 game.setMonster(monster);
             }
             
@@ -225,6 +220,10 @@ public class Tables {
             
             if (game != null){
                game.setPlayer(player); 
+               game.getCenterPanel().remove(0);
+               game.getSouthPanel().remove(1);
+               game.getCenterPanel().add(player,0);
+               game.getSouthPanel().add(player.getPlayerStatusLabel(),1);
             }
             
             
@@ -332,47 +331,60 @@ public class Tables {
     
     
     public int savePlayer(PlayerPanel player){
-        int i = 1;
-        try {
-            this.statement = conn.createStatement();
-            ResultSet rs = statement.executeQuery("SELECT * FROM PLAYER ");
-            while (rs.next()) {
-                ++i;
-            }
-            rs.close();
-            player.setUserID(i);
-            String name = player.getName();
-            int health= player.getHealth();
-            int attack = player.getAttack();
-            int defense = player.getDefense();
-            ArrayList<ItemPanel> items = player.getInventory();
-            int item1ID = items.size() > 0 ? items.get(0).getID() : -1;
-            int item2ID = items.size() > 1 ? items.get(1).getID() : -1;
-            int item3ID = items.size() > 2 ? items.get(2).getID() : -1;
-            int item4ID = items.size() > 3 ? items.get(3).getID() : -1;
-            int item5ID = items.size() > 4 ? items.get(4).getID() : -1;
-
-            String sql = String.format(
-                    "INSERT INTO PLAYER VALUES (%d, '%s', %d, %d, %d, %s, %s, %s, %s, %s)",
-                    i, name, health, attack, defense,
-                    item1ID != -1 ? String.valueOf(item1ID) : "NULL",
-                    item2ID != -1 ? String.valueOf(item2ID) : "NULL",
-                    item3ID != -1 ? String.valueOf(item3ID) : "NULL",
-                    item4ID != -1 ? String.valueOf(item4ID) : "NULL",
-                    item5ID != -1 ? String.valueOf(item5ID) : "NULL"
-            );
-            
-            this.statement.executeUpdate(sql);
-            
-        } catch (SQLException ex) {
-            System.out.println(ex.getMessage());
+        
+        //if player has an ID it means that the game has already been saved before
+        if(player.getID() != 0){
+            updatePlayer(player);
         }
-        return i;
+        
+        else{
+            int i = 1;
+            try {
+                this.statement = conn.createStatement();
+                ResultSet rs = statement.executeQuery("SELECT * FROM PLAYER ");
+                while (rs.next()) {
+                    ++i;
+                }
+                rs.close();
+                player.setUserID(i);
+                String name = player.getName();
+                int health= player.getHealth();
+                int attack = player.getAttack();
+                int defense = player.getDefense();
+                ArrayList<ItemPanel> items = player.getInventory();
+                int item1ID = items.size() > 0 ? items.get(0).getID() : -1;
+                int item2ID = items.size() > 1 ? items.get(1).getID() : -1;
+                int item3ID = items.size() > 2 ? items.get(2).getID() : -1;
+                int item4ID = items.size() > 3 ? items.get(3).getID() : -1;
+                int item5ID = items.size() > 4 ? items.get(4).getID() : -1;
+
+                String sql = String.format(
+                        "INSERT INTO PLAYER VALUES (%d, '%s', %d, %d, %d, %s, %s, %s, %s, %s)",
+                        i, name, health, attack, defense,
+                        item1ID != -1 ? String.valueOf(item1ID) : "NULL",
+                        item2ID != -1 ? String.valueOf(item2ID) : "NULL",
+                        item3ID != -1 ? String.valueOf(item3ID) : "NULL",
+                        item4ID != -1 ? String.valueOf(item4ID) : "NULL",
+                        item5ID != -1 ? String.valueOf(item5ID) : "NULL"
+                );
+
+                this.statement.executeUpdate(sql);
+
+            } catch (SQLException ex) {
+                System.out.println(ex.getMessage());
+            }
+            return i;
+        }
+        return 0;
+        //should either return an existed id to be updated or an new ID to be inserted
+        //'if its already existed ,t then ID is already assigned to the player, so yeah you should be able to retrive it prety easily
+        //we can check icf ID is just not 0, which means that it's has alredy been save d bfore,
+        //when player waas created it aleasys has ID 0 until it is saved.
     }
     
     public void updateMonster(MonsterPanel monster) {
         String sql = String.format(
-            "UPDATE MONSTER SET HEALTH = %d, ATK = %d WHERE MONSTERID = %d",
+            "UPDATE MONSTER SET MONSTER_HEALTH = %d, MONSTER_ATK = %d WHERE MONSTERID = %d",
             monster.getHealth(), monster.getAttack(), monster.getID()
         );
 
@@ -384,26 +396,76 @@ public class Tables {
         }
     }
     
-    //TO DO: save game is not running correctly
-    //"The number of values assigned is not the same as the number of specified or implied columns."
-    public void saveGame(PlayerPanel player, int room, MonsterPanel monster){
-        int i = savePlayer(player);
-        updateMonster(monster);
-        
-        //gameID will be same as userID
+    public void updatePlayer(PlayerPanel player) {
+        ArrayList<ItemPanel> items = player.getInventory();
+        int item1ID = items.size() > 0 ? items.get(0).getID() : -1;
+        int item2ID = items.size() > 1 ? items.get(1).getID() : -1;
+        int item3ID = items.size() > 2 ? items.get(2).getID() : -1;
+        int item4ID = items.size() > 3 ? items.get(3).getID() : -1;
+        int item5ID = items.size() > 4 ? items.get(4).getID() : -1;
         String sql = String.format(
-                //check here
-            "INSERT INTO GAME VALUES (%d, %d, %d, %d)",
-            i, i, room, monster.getID()
+            "UPDATE PLAYER SET PLAYER_HEALTH = %d, PLAYER_ATK = %d, PLAYER_DEF = %d, "
+                    + "ITEM_1_ID = %s, ITEM_2_ID = %s, ITEM_3_ID = %s, ITEM_4_ID = %s, ITEM_5_ID = %s"
+                    + " WHERE PLAYER_ID = %d",
+            player.getHealth(), player.getAttack(), player.getDefense(),
+            item1ID != -1 ? String.valueOf(item1ID) : "NULL",
+            item2ID != -1 ? String.valueOf(item2ID) : "NULL",
+            item3ID != -1 ? String.valueOf(item3ID) : "NULL",
+            item4ID != -1 ? String.valueOf(item4ID) : "NULL",
+            item5ID != -1 ? String.valueOf(item5ID) : "NULL",
+            player.getID()
         );
-        try{
+
+        try {
             this.statement = conn.createStatement();
             this.statement.executeUpdate(sql);
-            
         } catch (SQLException ex) {
             System.out.println(ex.getMessage());
         }
+    }
+    
+    
+    public void saveGame(PlayerPanel player, int room, MonsterPanel monster){
+        int i = savePlayer(player);
         
+        //monster gets updated nevertheless
+        updateMonster(monster);
+        
+        //player already exists
+        if (i ==0){
+            updateGame(player,room, monster);
+            //update game as well and not create new entry
+        }
+        else{
+            
+            //gameID will be same as userID
+            String sql = String.format(
+                    //check here
+                "INSERT INTO GAME VALUES (%d, %d, %d, %d)",
+                i, i, room, monster.getID()
+            );
+            try{
+                this.statement = conn.createStatement();
+                this.statement.executeUpdate(sql);
+
+            } catch (SQLException ex) {
+                System.out.println(ex.getMessage());
+            }
+        }
+    }
+    
+    public void updateGame(PlayerPanel player, int room, MonsterPanel monster) {
+        String sql = String.format(
+            "UPDATE GAME SET ROOM = %d, MONSTERID = %d WHERE PLAYER_ID = %d",
+            room, monster.getID(), player.getID()
+        );
+
+        try {
+            this.statement = conn.createStatement();
+            this.statement.executeUpdate(sql);
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        }
     }
 
     //returns if table exists or not
