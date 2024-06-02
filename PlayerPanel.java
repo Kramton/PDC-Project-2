@@ -24,6 +24,7 @@ public class PlayerPanel extends JPanel {
     private JPanel playerIcon;
     private String name;
     private JLabel nameLabel;
+    private int user_id;
     private int health;
     private int attack;
     private int defense;
@@ -42,10 +43,11 @@ public class PlayerPanel extends JPanel {
         //this.setPreferredSize(new Dimension(587/2, 707/2));
         //this.image = image.getScaledInstance(587/2, 707/2, Image.SCALE_DEFAULT);
         this.setOpaque(false);
+        this.user_id = 0;
         this.name = name;
         this.nameLabel = new JLabel(name);
         this.health = 100; // deafult 100
-        this.attack = 100; // default 10
+        this.attack = 10; // default 10
         this.defense = 5; // default 5
         this.playerStatusLabel = new JLabel("<html>Health: " + this.health
                                             + "<br>Attack: " + this.attack 
@@ -101,6 +103,10 @@ public class PlayerPanel extends JPanel {
         }
         return false;
     }
+    
+    public String getName() {
+        return this.name;
+    }
 
     public int getHealth() {
         return this.health;
@@ -124,6 +130,10 @@ public class PlayerPanel extends JPanel {
 
     public void setHealth(int value) {
         this.health = value;
+    }
+    
+    public void setUserID(int id){
+        this.user_id = id;
     }
 
     public void changeHealth(int value) {
@@ -152,8 +162,16 @@ public class PlayerPanel extends JPanel {
         }
     }
     
+    public int getID(){
+        return this.user_id;
+    }
+    
     public JLabel getPlayerStatusLabel(){
         return this.playerStatusLabel;
+    }
+    
+    public JLabel getImageLabel(){
+        return this.imageLabel;
     }
     
     public JPanel getPlayerIcon(){
@@ -169,7 +187,7 @@ public class PlayerPanel extends JPanel {
     }
     
     public void updateStatusLabel() {
-        playerStatusLabel.setText("<html>Health: " + this.health
+        this.playerStatusLabel.setText("<html>Health: " + this.health
                                 + "<br>Attack: " + this.attack
                                 + "<br>Defense: " + this.defense + "</html>");
         revalidate();

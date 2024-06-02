@@ -8,17 +8,16 @@ package main;
  *
  * @author cqm0237
  */
-import main.Items.*;
+
 import javax.swing.*;
 import java.awt.*;
 import static java.awt.Font.PLAIN;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
-import java.util.InputMismatchException;
 import java.util.Random;
-import java.util.Scanner;
 import main.Monsters.*;
+import main.Items.*;
 import main.database.Tables;
 
 public class GamePanel extends JPanel implements Runnable{
@@ -52,7 +51,7 @@ public class GamePanel extends JPanel implements Runnable{
         inventory = new ArrayList<>();
         gameID = 0;
         setLayout(new BorderLayout());
-        this.bgImage = new ImageIcon("./resources/dungeon_background_1.png").getImage();
+        this.bgImage = new ImageIcon("./resources/dungeon background 1.png").getImage();
         roomLabel = new JLabel("Room " + room);
         Font font = new Font("Serif", PLAIN, 36);
         roomLabel.setFont(font);
@@ -78,29 +77,15 @@ public class GamePanel extends JPanel implements Runnable{
         southPanel.add(menuPanel);
         this.add(southPanel, BorderLayout.SOUTH);
         
-        // Start a new thread to handle the loop, otherwise it wont run 
-        /*A separate thread is started to handle the loop action. 
-        This prevents the main event dispatch thread (EDT) from being blocked, 
-        which is crucial to keep the GUI responsive. - Chat GPT*/
-        
-        
         tables = new Tables();
-        
         tables.createGameEntryTable();
         tables.createPlayerTable();
         tables.createItemTable();
         tables.createMonsterTable();
-        
-//        tables.closeConnection();
-        /*
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                gameStart();
-            }
-        }).start();*/
     }
     
+    
+    //main game loop is run as a thread
     @Override
     public void run() {
         gameStart();
@@ -274,32 +259,6 @@ public class GamePanel extends JPanel implements Runnable{
                     gameChatLog.setText("No item to use in slot 5.");
                 }
                 break;
-//            case 21:
-//                // Use item
-//                iHandler.useItem(player, 1);
-//                SwingUtilities.invokeLater(() -> gameChatLog.setText("Using item 1"));
-//                
-//                break;
-//            case 22:
-//                // Use item
-//                iHandler.useItem(player, 2);
-//                SwingUtilities.invokeLater(() -> gameChatLog.setText("Using item 2"));
-//                break;
-//            case 23:
-//                // Use item
-//                iHandler.useItem(player, 3);
-//                SwingUtilities.invokeLater(() -> gameChatLog.setText("Using item 3"));
-//                break;
-//            case 24:
-//                // Use item
-//                iHandler.useItem(player, 4);
-//                SwingUtilities.invokeLater(() -> gameChatLog.setText("Using item 4"));
-//                break;
-//            case 25:
-//                // Use item
-//                iHandler.useItem(player, 5);
-//                SwingUtilities.invokeLater(() -> gameChatLog.setText("Using item 5"));
-//                break;
             case 3:
                 System.out.println("Show help button pressed");
                 SwingUtilities.invokeLater(() -> iHandler.help());
@@ -343,6 +302,18 @@ public class GamePanel extends JPanel implements Runnable{
         inputNumber = 0;
     }
     
+    public int getID(){
+        return this.gameID;
+    }
+    
+    public JPanel getCenterPanel(){
+        return this.centerPanel;
+    }
+    
+    public JPanel getSouthPanel(){
+        return this.southPanel;
+    }
+    
     public void setGameID(int id){
         this.gameID = id;
     }
@@ -354,6 +325,10 @@ public class GamePanel extends JPanel implements Runnable{
     }
     public void setRoom(int room){
         this.room = room;
+    }
+    
+    public void setRoomLabel(int room){
+        this.roomLabel.setText("Room: " + room);
     }
     
     public void setBgImage(int room){
