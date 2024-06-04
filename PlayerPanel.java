@@ -21,6 +21,7 @@ import javax.swing.*;
 public class PlayerPanel extends JPanel {
 
     //public Image image;
+    private MenuPanel menuPanel;
     private JPanel playerIcon;
     private String name;
     private JLabel nameLabel;
@@ -37,7 +38,7 @@ public class PlayerPanel extends JPanel {
     public PlayerPanel(String name) {
         
         this.inventory = new ArrayList<>();
-        
+        this.menuPanel = new MenuPanel();
         this.setLayout(new BorderLayout());
         //this.image = new ImageIcon("./resources/Idle (10).png").getImage();
         //this.setPreferredSize(new Dimension(587/2, 707/2));
@@ -47,7 +48,7 @@ public class PlayerPanel extends JPanel {
         this.name = name;
         this.nameLabel = new JLabel(name);
         this.health = 100; // deafult 100
-        this.attack = 10; // default 10
+        this.attack = 1000; // default 10
         this.defense = 5; // default 5
         this.playerStatusLabel = new JLabel("<html>Health: " + this.health
                                             + "<br>Attack: " + this.attack 
@@ -95,6 +96,10 @@ public class PlayerPanel extends JPanel {
     
     public ArrayList<ItemPanel> getInventory() {
         return inventory;
+    }
+    
+    public int getInventoryLength() {
+        return inventory.size();
     }
 
     public boolean isDead() {
