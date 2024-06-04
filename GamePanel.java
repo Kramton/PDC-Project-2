@@ -23,6 +23,7 @@ import main.database.Tables;
 public class GamePanel extends JPanel implements Runnable{
     
     private PlayerPanel player;
+    private MenuPanel menuPanel;
     private MonsterPanel monster;
     private int room = 1;
     private int gameID;
@@ -32,6 +33,7 @@ public class GamePanel extends JPanel implements Runnable{
     private Image bgImage;
     private Image item;
     private ArrayList<ItemPanel> inventory;
+    private int slot;
     
     private JPanel centerPanel;
     private JPanel southPanel;
@@ -70,7 +72,7 @@ public class GamePanel extends JPanel implements Runnable{
         southPanel = new JPanel(new GridLayout(1, 4));
         southPanel.setPreferredSize(new Dimension(1500, 200));
         gameChatLog = new JLabel("Game chat goes here");
-        MenuPanel menuPanel = new MenuPanel();
+        menuPanel = new MenuPanel();
         southPanel.add(player.getPlayerIcon());
         southPanel.add(player.getPlayerStatusLabel());
         southPanel.add(gameChatLog);
@@ -141,8 +143,26 @@ public class GamePanel extends JPanel implements Runnable{
                     player.addItemToInvetory(reward);
                     centerPanel.add(reward);
                     
+                    // update inventory item text
+                    System.out.println(reward.getName());
+                    System.out.println(player.getInventoryLength());
+                    
+                    slot = player.getInventoryLength();
+                    switch (reward.getName()) {
+                        case "Potion":
+                            menuPanel.updateItemButton(slot, "Potion");
+                            break;
+                        case "Shield":
+                            menuPanel.updateItemButton(slot, "Shield");
+                            break;
+                        case "Sword":
+                            menuPanel.updateItemButton(slot, "Sword");
+                            break;
+                    }
+                    
                     // update UI to show item drop
                     gameChatLog.setText("You have received a " + reward.getName() + "!");
+                    
                     centerPanel.revalidate();
                     centerPanel.repaint();
                     
