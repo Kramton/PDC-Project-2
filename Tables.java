@@ -15,6 +15,7 @@ import java.util.Random;
 import main.GamePanel;
 import main.ItemPanel;
 import main.Items.*;
+import main.MenuPanel;
 import main.MonsterPanel;
 import main.Monsters.*;
 import main.PlayerPanel;
@@ -224,6 +225,19 @@ public class Tables {
                game.getSouthPanel().remove(1);
                game.getCenterPanel().add(player,0);
                game.getSouthPanel().add(player.getPlayerStatusLabel(),1);
+               
+               game.getSouthPanel().remove(3);
+               
+               int slot_counter = 1;
+               MenuPanel loadMenu = new MenuPanel();
+               for (ItemPanel i : player.getInventory())
+               {
+                   if(i != null){
+                       loadMenu.updateItemButton(slot_counter, i.getName(), i.getStat());
+                       slot_counter++;
+                   }
+               }
+               game.getSouthPanel().add(loadMenu,3);
             }
             
             
