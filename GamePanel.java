@@ -139,36 +139,41 @@ public class GamePanel extends JPanel implements Runnable{
                 } else {
                     // Item drop logic and add to inventory
 
-                    ItemPanel reward = tables.getRandomItem();
-                    player.addItemToInvetory(reward);
-                    centerPanel.add(reward);
-                    
-                    // update inventory item text
-                    System.out.println(reward.getName());
-                    System.out.println(player.getInventoryLength());
-                    
-                    slot = player.getInventoryLength();
-                    switch (reward.getName()) {
-                        case "Potion":
-                            menuPanel.updateItemButton(slot, "Potion");
-                            break;
-                        case "Shield":
-                            menuPanel.updateItemButton(slot, "Shield");
-                            break;
-                        case "Sword":
-                            menuPanel.updateItemButton(slot, "Sword");
-                            break;
+                    if (room < 5){
+                            ItemPanel reward = tables.getRandomItem();
+                        player.addItemToInvetory(reward);
+                        centerPanel.add(reward);
+
+                        // update inventory item text
+                        System.out.println(reward.getName());
+                        System.out.println(player.getInventoryLength());
+
+                        slot = player.getInventoryLength();
+                        switch (reward.getName()) {
+                            case "Potion":
+                                menuPanel.updateItemButton(slot-1, "Potion", reward.getStat());
+                                break;
+                            case "Shield":
+                                menuPanel.updateItemButton(slot-1, "Shield", reward.getStat());
+                                break;
+                            case "Sword":
+                                menuPanel.updateItemButton(slot-1, "Sword", reward.getStat());
+                                break;
+
+
+                        }
+
+                        // update UI to show item drop
+                        gameChatLog.setText("You have received a " + reward.getName() + ", Stat: " + reward.getStat() +"!");
+
+                        centerPanel.revalidate();
+                        centerPanel.repaint();
+
+                        Thread.sleep(1500);
+
+                        centerPanel.remove(reward);
                     }
                     
-                    // update UI to show item drop
-                    gameChatLog.setText("You have received a " + reward.getName() + "!");
-                    
-                    centerPanel.revalidate();
-                    centerPanel.repaint();
-                    
-                    Thread.sleep(1500);
-
-                    centerPanel.remove(reward);
 
                     this.room++;
                     this.roomLabel.setText("Room: " + room);
@@ -230,51 +235,96 @@ public class GamePanel extends JPanel implements Runnable{
                
                 break;
             case 21:
-                // Use item
+                // Use item 1
                 ItemPanel item1 = player.useItem(0);
                 if (item1 != null) {
                     iHandler.useItem(player, item1);
                     gameChatLog.setText("Using item: " + item1.getName());
+                    //update the entire menu labelling
+                    for (int i = 0; i < player.getInventoryLength(); i++){
+                        menuPanel.updateItemButton(i, player.getInventory().get(i).getName(), player.getInventory().get(i).getStat());
+                    }
+                    for (int i = player.getInventoryLength(); i < 5; i++){
+                        menuPanel.updateItemButton(i, "Empty!", 0);
+                    }
+                    revalidate();
+                    repaint();
                 } else {
                     gameChatLog.setText("No item to use in slot 1.");
                 }
                 break;
             case 22:
-                // Use item
+                // Use item 2
                 ItemPanel item2 = player.useItem(1);
                 if (item2 != null) {
                     iHandler.useItem(player, item2);
                     gameChatLog.setText("Using item: " + item2.getName());
+                    
+                    for (int i = 0; i < player.getInventoryLength(); i++){
+                        menuPanel.updateItemButton(i, player.getInventory().get(i).getName(), player.getInventory().get(i).getStat());
+                    }
+                    for (int i = player.getInventoryLength(); i < 5; i++){
+                        menuPanel.updateItemButton(i, "Empty!", 0);
+                    }
+                    revalidate();
+                    repaint();
                 } else {
                     gameChatLog.setText("No item to use in slot 2.");
                 }
                 break;
             case 23:
-                // Use item
+                // Use item 3
                 ItemPanel item3 = player.useItem(2);
                 if (item3 != null) {
                     iHandler.useItem(player, item3);
                     gameChatLog.setText("Using item: " + item3.getName());
+                    
+                    for (int i = 0; i < player.getInventoryLength(); i++){
+                        menuPanel.updateItemButton(i, player.getInventory().get(i).getName(), player.getInventory().get(i).getStat());
+                    }
+                    for (int i = player.getInventoryLength(); i < 5; i++){
+                        menuPanel.updateItemButton(i, "Empty!", 0);
+                    }
+                    revalidate();
+                    repaint();
                 } else {
                     gameChatLog.setText("No item to use in slot 3.");
                 }
                 break;
             case 24:
-                // Use item
+                // Use item 4
                 ItemPanel item4 = player.useItem(3);
                 if (item4 != null) {
                     iHandler.useItem(player, item4);
                     gameChatLog.setText("Using item: " + item4.getName());
+                    
+                    for (int i = 0; i < player.getInventoryLength(); i++){
+                        menuPanel.updateItemButton(i, player.getInventory().get(i).getName(), player.getInventory().get(i).getStat());
+                    }
+                    for (int i = player.getInventoryLength(); i < 5; i++){
+                        menuPanel.updateItemButton(i, "Empty!", 0);
+                    }
+                    revalidate();
+                    repaint();
                 } else {
                     gameChatLog.setText("No item to use in slot 4.");
                 }
                 break;
             case 25:
-                // Use item
+                // Use item 5
                 ItemPanel item5 = player.useItem(4);
                 if (item5 != null) {
                     iHandler.useItem(player, item5);
                     gameChatLog.setText("Using item: " + item5.getName());
+                    
+                    for (int i = 0; i < player.getInventoryLength(); i++){
+                        menuPanel.updateItemButton(i, player.getInventory().get(i).getName(), player.getInventory().get(i).getStat());
+                    }
+                    for (int i = player.getInventoryLength(); i < 5; i++){
+                        menuPanel.updateItemButton(i, "Empty!", 0);
+                    }
+                    revalidate();
+                    repaint();
                 } else {
                     gameChatLog.setText("No item to use in slot 5.");
                 }
