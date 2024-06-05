@@ -48,7 +48,7 @@ public class PlayerPanel extends JPanel {
         this.name = name;
         this.nameLabel = new JLabel(name);
         this.health = 100; // deafult 100
-        this.attack = 1000; // default 10
+        this.attack = 10; // default 10
         this.defense = 5; // default 5
         this.playerStatusLabel = new JLabel("<html>Health: " + this.health
                                             + "<br>Attack: " + this.attack 
