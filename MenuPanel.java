@@ -117,7 +117,6 @@ public class MenuPanel extends JPanel{
         
     }
     
-    
     public void updateItemButton(int slot, String itemName) {
         switch (slot) {
             case 1:
@@ -134,6 +133,23 @@ public class MenuPanel extends JPanel{
                 break;
             case 5:
                 item5Button.setText(itemName);
+
+    public void updateItemButton(int slot, String itemName, int stat) {
+        switch (slot) {
+            case 0:
+                item1Button.setText("<html> " + itemName + " <br> " + stat + "</html>");
+                break;
+            case 1:
+                item2Button.setText("<html> " + itemName + " <br> " + stat + "</html>");
+                break;
+            case 2:
+                item3Button.setText("<html> " + itemName + " <br> " + stat + "</html>");
+                break;
+            case 3:
+                item4Button.setText("<html> " + itemName + " <br> " + stat + "</html>");
+                break;
+            case 4:
+                item5Button.setText("<html> " + itemName + " <br> " + stat + "</html>");
                 break;
         }
 
@@ -166,26 +182,36 @@ public class MenuPanel extends JPanel{
     private void useItem1() {
         GamePanel.setUserInput(true, 21);
         item1Button.setText("Slot 1");
+
+        //item1Button.setText("Slot 1");
+
         //cardLayout.show(this, "Items");
     }
     private void useItem2() {
         GamePanel.setUserInput(true, 22);
         item2Button.setText("Slot 2");
+
+        //item2Button.setText("Slot 2");
         //cardLayout.show(this, "Items");
     }
     private void useItem3() {
         GamePanel.setUserInput(true, 23);
         item3Button.setText("Slot 3");
+
+        //item3Button.setText("Slot 3");
         //cardLayout.show(this, "Items");
     }
     private void useItem4() {
         GamePanel.setUserInput(true, 24);
         item4Button.setText("Slot 4");
+
+        //item4Button.setText("Slot 4");
         //cardLayout.show(this, "Items");
     }
     private void useItem5() {
         GamePanel.setUserInput(true, 25);
         item5Button.setText("Slot 5");
+        //item5Button.setText("Slot 5");
         //cardLayout.show(this, "Items");
     }
 
